@@ -1,4 +1,14 @@
 <html>
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+        iframe {
+            border: none;
+        }
+    </style>
+</head>
 <body>
     <iframe id="chat_embed"
             src=""
@@ -17,7 +27,7 @@
 
         if (twitchUser) {
             const iframe = document.getElementById('chat_embed');
-            iframe.src = `https://www.twitch.tv/embed/${twitchUser}/chat?parent=${window.location.hostname}`;
+            iframe.src = `https://www.twitch.tv/embed/${twitchUser}/chat?darkpopout&parent=${window.location.hostname}`;
         } else {
             document.body.innerHTML = '<p>Brak nazwy u¿ytkownika Twitch w adresie URL. Dodaj ?user=nazwa_uzytkownika do adresu strony.</p>';
         }</script>
