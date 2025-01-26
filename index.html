@@ -22,6 +22,11 @@
             width="100%">
     </iframe>
     <iframe id="video_yt_embed" style="display: none;" src=""></iframe>"
+    <iframe id="chat_tt_embed"
+            src=""
+            height="100%"
+            width="100%">
+    </iframe>
     <script>
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -54,6 +59,7 @@
         }
 
         const twitchUser = getQueryParam('ttv');
+        const tiktokUser = getQueryParam('tt');
         const youtubeUser = getQueryParam('yt');
 
         if (twitchUser) {
@@ -61,6 +67,13 @@
             iframeTTV.src = `https://www.twitch.tv/embed/${twitchUser}/chat?darkpopout&parent=${window.location.hostname}`;
         } else {
             document.body.innerHTML = '<p>Brak nazwy użytkownika Twitch w adresie URL!</p>' + document.body.innerHTML;
+        }
+
+        if (tiktokUser) {
+            const iframeTT = document.getElementById('chat_tt_embed');
+            iframeTTV.src = `https://www.tiktok.com/${tiktokUser}/live`;
+        } else {
+            document.body.innerHTML = '<p>Brak nazwy użytkownika TikTok w adresie URL!</p>' + document.body.innerHTML;
         }
 
         if (youtubeUser) {
