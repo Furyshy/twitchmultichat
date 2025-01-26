@@ -69,19 +69,19 @@
 
             iframeYT_video.src = `https://www.youtube.com/embed/live_stream?channel=${youtubeUser}`;
 
-            iframeYT_video.load(function () {
-                (async () => {
-                    try {
-                        const videoId = getLiveVideoID(iframeYT_video);
+            await new Promise(r => setTimeout(r, 3500));
 
-                        iframeYT_chat.src = `https://www.youtube.com/live_chat?is_popout=1&v=${videoId}&embed_domain=${window.location.hostname}`;
-                    } catch (error) {
-                        document.body.innerHTML = `ERROR: ${error.message}` + document.body.innerHTML;
-                    }
-                })();
-            });
+            (async () => {
+                try {
+                    const videoId = getLiveVideoID(iframeYT_video);
+
+                    iframeYT_chat.src = `https://www.youtube.com/live_chat?is_popout=1&v=${videoId}&embed_domain=${window.location.hostname}`;
+                } catch (error) {
+                    document.body.innerHTML = `ERROR: ${error.message}` + document.body.innerHTML;
+                }
+            })();
         } else {
-            document.body.innerHTML = '<p>Brak nazwy użytkownika YouTube w adresie URL!</p>' + document.body.innerHTML;
+            document.body.innerHTML = '<p>Brak ID użytkownika YouTube w adresie URL!</p>' + document.body.innerHTML;
         }
 
 
