@@ -21,34 +21,36 @@
             height="100%"
             width="100%">
     </iframe>
-
+    <iframe id="video_yt_embed" style="display: none;" src=""></iframe>"
     <script>
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
 
-        async function getLiveVideoID(channelId) {
-            let videoId = null;
+        function getLiveVideoID() {
 
             try {
-                const response = await fetch(`https://www.youtube.com/embed/live_stream?channel=${channelId}`);
-                if (!response.ok) {
-                    document.body.innerHTML = '<p>Nie mo¿na pobraæ danych...</p>' + document.body.innerHTML;
-                    throw new Error('Nie mo¿na pobraæ danych...');
+                const iframe = document.getElementById('video_yt_embed');
+                if (!iframe) {
+                    document.body.innerHTML = '<p>Nie znaleziono iframe...</p>' + document.body.innerHTML;
+                    throw new Error('Nie znaleziono iframe...');
                 }
 
-                const data = await response.text();
+                const iframeSrc = iframe.src;
+                if (!iframeSrc) {
+                    document.body.innerHTML = '<p>Iframe nie posiada atrybutu src...</p>' + document.body.innerHTML;
+                    throw new Error('Iframe nie posiada atrybutu src...');
+                }
 
-                const matches = data.match(/'VIDEO_ID': "(.*?)"/);
+                const matches = iframeSrc.match(/\/live_stream\?channel=([^&]+)/);
                 if (matches && matches[1]) {
                     videoId = matches[1];
                 } else {
-                    document.body.innerHTML = '<p>Nie mo¿na odnaleŸæ ID wideo...</p>' + document.body.innerHTML;
-                    throw new Error('Nie mo¿na odnaleŸæ ID wideo...');
+                    document.body.innerHTML = '<p>Nie mo¿na odnaleŸæ ID wideo w iframe...</p>' + document.body.innerHTML;
+                    throw new Error('Nie mo¿na odnaleŸæ ID wideo w iframe...');
                 }
             } catch (error) {
-                document.body.innerHTML = `<p>ERROR: ${error.message}</p>` + document.body.innerHTML;
                 throw new Error(error.message);
             }
 
@@ -66,15 +68,20 @@
         }
 
         if (youtubeUser) {
-            const iframeYT = document.getElementById('chat_yt_embed');
+            const iframeYT_chat = document.getElementById('chat_yt_embed');
+            const iframeYT_video = document.getElementById('video_yt_embed');
+
+            iframeYT_video.src = `https://www.youtube.com/embed/live_stream?channel=${videoId}`;
+
+
 
             (async () => {
                 try {
-                    const videoId = await getLiveVideoID(youtubeUser);
+                    const videoId = await getLiveVideoID();
 
-                    iframeYT.src = `https://www.youtube.com/live_chat?v=${videoId}&amp;embed_domain=${window.location.hostname}`;
+                    iframeYT_chat.src = `https://www.youtube.com/live_chat?v=${videoId}&amp;embed_domain=${window.location.hostname}`;
                 } catch (error) {
-                    document.body.innerHTML = `<p>ERROR: ${error.message}</p>` + document.body.innerHTML;
+                    document.body.innerHTML = `ERROR: ${error.message}` + document.body.innerHTML;
                 }
             })();
         } else {
