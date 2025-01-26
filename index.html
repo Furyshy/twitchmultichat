@@ -32,7 +32,7 @@
             let videoId = null;
 
             try {
-                const response = await fetch(`https://www.youtube.com/embed/live_stream?channel=${channelId}&amp;embed_domain=${window.location.hostname}`);
+                const response = await fetch(`https://www.youtube.com/embed/live_stream?channel=${channelId}`);
                 if (!response.ok) {
                     document.body.innerHTML = '<p>Nie mo¿na pobraæ danych...</p>' + document.body.innerHTML;
                     throw new Error('Nie mo¿na pobraæ danych...');
@@ -60,7 +60,7 @@
 
         if (twitchUser) {
             const iframeTTV = document.getElementById('chat_ttv_embed');
-            iframeTTV.src = `https://www.twitch.tv/embed/${twitchUser}/chat?parent=${window.location.hostname}`;
+            iframeTTV.src = `https://www.twitch.tv/embed/${twitchUser}/chat?darkpopout&parent=${window.location.hostname}`;
         } else {
             document.body.innerHTML = '<p>Brak nazwy u¿ytkownika Twitch w adresie URL!</p>' + document.body.innerHTML;
         }
