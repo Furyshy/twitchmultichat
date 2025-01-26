@@ -77,7 +77,7 @@
                 try {
                     const videoId = await getLiveVideoID();
 
-                    iframeYT_chat.src = `https://www.youtube.com/live_chat?v=${videoId}&amp;embed_domain=${window.location.hostname}`;
+                    iframeYT_chat.src = `https://www.youtube.com/live_chat?is_popout=1&v=${videoId}&embed_domain=${window.location.hostname}`;
                 } catch (error) {
                     document.body.innerHTML = `ERROR: ${error.message}` + document.body.innerHTML;
                 }
