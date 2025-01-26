@@ -28,33 +28,26 @@
             return urlParams.get(param);
         }
 
-        function getLiveVideoID() {
+        function getLiveVideoID(iframe) {
 
             try {
-                const iframe = document.getElementById('video_yt_embed');
-                if (!iframe) {
-                    document.body.innerHTML = '<p>Nie znaleziono iframe...</p>' + document.body.innerHTML;
-                    throw new Error('Nie znaleziono iframe...');
-                }
+                const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                if (!iframeDoc) {
-                    document.body.innerHTML = '<p>Nie mo¿na uzyskaæ zawartoœci iframe...</p>' + document.body.innerHTML;
-                    throw new Error('Nie mo¿na uzyskaæ zawartoœci iframe...');
-                }
+                const canonicalLink = iframeDocument.querySelector('link[rel="canonical"]');
 
-                const iframeContent = iframeDoc.body.innerHTML;
-
-                const matches = iframeContent.match(/'VIDEO_ID': "(.*?)"/);
-
-                if (matches && matches[1]) {
-                    videoId = matches[1];
+                if (canonicalLink) {
+                    const href = canonicalLink.getAttribute('href');
+                    const videoId = href.split('v=')[1];
+                    return videoId;
                 } else {
-                    document.body.innerHTML = '<p>Nie mo¿na odnaleŸæ ID wideo w iframe...</p>' + document.body.innerHTML;
-                    throw new Error('Nie mo¿na odnaleŸæ ID wideo w iframe...');
+                    document.body.innerHTML = '<p>Nie znaleziono tagu dla YouTube ID!</p>' + document.body.innerHTML;
+                    console.error('Nie znaleziono tagu <link rel="canonical">');
+                    return null;
                 }
             } catch (error) {
-                throw new Error(error.message);
+                document.body.innerHTML = '<p>Nie moÅ¼na uzyskaÄ‡ dostÄ™pu do zawartoÅ›ci iframe: ' + error + '</p>' + document.body.innerHTML;
+                console.error('Nie moÅ¼na uzyskaÄ‡ dostÄ™pu do zawartoÅ›ci iframe:', error);
+                return null;
             }
 
             return videoId;
@@ -67,7 +60,7 @@
             const iframeTTV = document.getElementById('chat_ttv_embed');
             iframeTTV.src = `https://www.twitch.tv/embed/${twitchUser}/chat?darkpopout&parent=${window.location.hostname}`;
         } else {
-            document.body.innerHTML = '<p>Brak nazwy u¿ytkownika Twitch w adresie URL!</p>' + document.body.innerHTML;
+            document.body.innerHTML = '<p>Brak nazwy uÅ¼ytkownika Twitch w adresie URL!</p>' + document.body.innerHTML;
         }
 
         if (youtubeUser) {
@@ -78,7 +71,7 @@
 
             (async () => {
                 try {
-                    const videoId = await getLiveVideoID();
+                    const videoId = getLiveVideoID(iframeYT_video);
 
                     iframeYT_chat.src = `https://www.youtube.com/live_chat?is_popout=1&v=${videoId}&embed_domain=${window.location.hostname}`;
                 } catch (error) {
@@ -86,7 +79,7 @@
                 }
             })();
         } else {
-            document.body.innerHTML = '<p>Brak nazwy u¿ytkownika YouTube w adresie URL!</p>' + document.body.innerHTML;
+            document.body.innerHTML = '<p>Brak nazwy uÅ¼ytkownika YouTube w adresie URL!</p>' + document.body.innerHTML;
         }
 
 
