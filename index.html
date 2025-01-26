@@ -71,7 +71,7 @@
 
         if (tiktokUser) {
             const iframeTT = document.getElementById('chat_tt_embed');
-            iframeTTV.src = `https://www.tiktok.com/${tiktokUser}/live`;
+            iframeTT.src = `https://www.tiktok.com/${tiktokUser}/live`;
         } else {
             document.body.innerHTML = '<p>Brak nazwy użytkownika TikTok w adresie URL!</p>' + document.body.innerHTML;
         }
