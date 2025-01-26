@@ -37,13 +37,16 @@
                     throw new Error('Nie znaleziono iframe...');
                 }
 
-                const iframeSrc = iframe.src;
-                if (!iframeSrc) {
-                    document.body.innerHTML = '<p>Iframe nie posiada atrybutu src...</p>' + document.body.innerHTML;
-                    throw new Error('Iframe nie posiada atrybutu src...');
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (!iframeDoc) {
+                    document.body.innerHTML = '<p>Nie mo¿na uzyskaæ zawartoœci iframe...</p>' + document.body.innerHTML;
+                    throw new Error('Nie mo¿na uzyskaæ zawartoœci iframe...');
                 }
 
-                const matches = iframeSrc.match(/\/live_stream\?channel=([^&]+)/);
+                const iframeContent = iframeDoc.body.innerHTML;
+
+                const matches = iframeContent.match(/'VIDEO_ID': "(.*?)"/);
+
                 if (matches && matches[1]) {
                     videoId = matches[1];
                 } else {
